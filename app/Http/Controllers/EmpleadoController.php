@@ -15,6 +15,7 @@ class EmpleadoController extends Controller
     public function index()
     {
         //
+        return view('empleado.index');
     }
 
     /**
@@ -37,6 +38,12 @@ class EmpleadoController extends Controller
     public function store(Request $request)
     {
         //
+        // $datosEmpleado = request()->all();
+        // Traemos todos los datos menos la llave csrf
+        $datosEmpleado = request()->except('_token');
+        // inserta la info en la base de datos
+        Empleado::insert($datosEmpleado);
+        return response()->json($datosEmpleado);
     }
 
     /**
