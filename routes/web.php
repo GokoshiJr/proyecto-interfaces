@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\EmpleadoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Esta ruta nos direcciona a welcome.blade en la carpeta views
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Colocamos el nombre de la carpeta y un . para acceder a los archivos dentro
+/* Route::get('/empleado', function () {
+    return view('empleado.index');
+});
+
+Route::get('/empleado/create', [EmpleadoController::class, 'create']); */
+
+// Ya accedemos a todos los metodos de la clase EmpleadoControler
+Route::resource('empleado', EmpleadoController::class);
