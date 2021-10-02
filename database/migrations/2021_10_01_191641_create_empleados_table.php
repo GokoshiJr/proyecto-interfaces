@@ -18,7 +18,7 @@ class CreateEmpleadosTable extends Migration
             $table->string("nombre");
             $table->string("apellido");
             $table->integer("cedula");
-            $table->date("fecha de nacimiento");
+            $table->date("fecha_nacimiento");
             $table->string("direccion");
             $table->string("estado");
             $table->string("ciudad");
