@@ -14,8 +14,8 @@ class EmpleadoController extends Controller
      */
     public function index()
     {
-        //
-        return view('empleado.index');
+        $datos['empleados'] = Empleado::paginate(5); // Consulta la informacion del modelo en la bd, y se lo pasamos a index.blade
+        return view('empleado.index', $datos);
     }
 
     /**
@@ -25,8 +25,7 @@ class EmpleadoController extends Controller
      */
     public function create()
     {
-        //
-        return view('empleado.create');
+        return view('empleado.create');        
     }
 
     /**
@@ -37,13 +36,13 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // $datosEmpleado = request()->all();
-        // Traemos todos los datos menos la llave csrf
-        $datosEmpleado = request()->except('_token');
-        // inserta la info en la base de datos
-        Empleado::insert($datosEmpleado);
-        return response()->json($datosEmpleado);
+        // $datosEmpleado = request()->all(); trae todos los datos       
+        $datosEmpleado = request()->except('_token'); // Traemos todos los datos menos la llave csrf
+        Empleado::insert($datosEmpleado); // inserta la info en la base de datos
+        // return response()->json($datosEmpleado);
+
+        // ya no mostramos un json, sino que redireccionamos y mostramos un mensaje
+        return redirect('empleado')->with('mensaje', 'Empleado agregado con exito');
     }
 
     /**
@@ -63,9 +62,10 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function edit(Empleado $empleado)
+    public function edit($id)
     {
-        //
+        $empleado = Empleado::findOrFail($id);
+        return view('empleado.edit', compact('empleado'));
     }
 
     /**
@@ -75,9 +75,18 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empleado $empleado)
+    public function update(Request $request, $id)
     {
-        //
+        // Traemos todos los datos menos la llave csrf y el method
+        $datosEmpleado = request()->except(['_token', '_method']);
+        // donde el id coincida en la bd actualizamos el empleado        
+        Empleado::where('id', '=', $id)->update($datosEmpleado);
+
+        // recuperamos el id y nos regresamos a edit
+        // $empleado = Empleado::findOrFail($id);
+        // return view('empleado.edit', compact('empleado'));
+        return redirect('empleado')->with('mensaje', 'Empleado editado con exito');
+        // return redirect('empleado');
     }
 
     /**
@@ -86,8 +95,10 @@ class EmpleadoController extends Controller
      * @param  \App\Models\Empleado  $empleado
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Empleado $empleado)
+    public function destroy($id)
     {
         //
+        Empleado::destroy($id);
+        return redirect('empleado')->with('mensaje', 'Empleado borrado');
     }
 }
