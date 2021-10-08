@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpleadoController;
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,7 +17,7 @@ use App\Http\Controllers\EmpleadoController;
 
 // Esta ruta nos direcciona a welcome.blade en la carpeta views
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Colocamos el nombre de la carpeta y un . para acceder a los archivos dentro
@@ -26,4 +28,13 @@ Route::get('/', function () {
 Route::get('/empleado/create', [EmpleadoController::class, 'create']); */
 
 // Ya accedemos a todos los metodos de la clase EmpleadoControler
-Route::resource('empleado', EmpleadoController::class);
+Route::resource('empleado', EmpleadoController::class)->middleware('auth'); // auth, para respetar la autenticacion y no crear empleados sin logearme
+
+// desactivamos el registro y el olvide clave
+Auth::routes(['register'=>false,'reset'=>false]);
+
+Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
+
+Route::group(['middleware' => 'auth'], function(){
+    Route::get('/', [EmpleadoController::class, 'index'])->name('home');
+});
