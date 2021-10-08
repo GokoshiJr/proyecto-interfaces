@@ -36,6 +36,25 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
+        // validacion de campos en el formulario
+        $campos = [
+            'nombre'=>'required|string|max:100',
+            'apellido'=>'required|string|max:100',
+            'cedula'=>'required|integer',
+            'fecha_nacimiento'=>'required|date',
+            'direccion'=>'required|string|max:200',
+            'estado'=>'required|string|max:100',
+            'ciudad'=>'required|string|max:100',
+            'correo'=>'required|email',
+            'clave'=>'required|string|max:100'
+        ];
+
+        $mensaje = [
+            'required'=>'El :attribute es requerido'
+        ];
+
+        $this->validate($request, $campos, $mensaje);
+
         // $datosEmpleado = request()->all(); trae todos los datos       
         $datosEmpleado = request()->except('_token'); // Traemos todos los datos menos la llave csrf
         Empleado::insert($datosEmpleado); // inserta la info en la base de datos
@@ -77,6 +96,25 @@ class EmpleadoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // validacion de campos en el formulario
+        $campos = [
+            'nombre'=>'required|string|max:100',
+            'apellido'=>'required|string|max:100',
+            'cedula'=>'required|integer',
+            'fecha_nacimiento'=>'required|date',
+            'direccion'=>'required|string|max:200',
+            'estado'=>'required|string|max:100',
+            'ciudad'=>'required|string|max:100',
+            'correo'=>'required|email',
+            'clave'=>'required|string|max:100'
+        ];
+
+        $mensaje = [
+            'required'=>'El :attribute es requerido'
+        ];
+
+        $this->validate($request, $campos, $mensaje);
+
         // Traemos todos los datos menos la llave csrf y el method
         $datosEmpleado = request()->except(['_token', '_method']);
         // donde el id coincida en la bd actualizamos el empleado        
