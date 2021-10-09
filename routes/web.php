@@ -31,10 +31,18 @@ Route::get('/empleado/create', [EmpleadoController::class, 'create']); */
 Route::resource('empleado', EmpleadoController::class)->middleware('auth'); // auth, para respetar la autenticacion y no crear empleados sin logearme
 
 // desactivamos el registro y el olvide clave
-Auth::routes(['register'=>false,'reset'=>false]);
+/* Auth::routes(['register'=>false,'reset'=>false]); */
+Auth::routes(['register'=>true,'reset'=>false]);
 
-Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
+// Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
 
 Route::group(['middleware' => 'auth'], function(){
+    Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
     Route::get('/', [EmpleadoController::class, 'index'])->name('home');
+});
+
+Route::group(['middleware' => [/* 'auth',  */'admin']], function(){
+    Route::get('/admin', function() {
+        return view('admin.dashboard');
+    });
 });
