@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -28,7 +30,8 @@ Route::get('/', function () {
 Route::get('/empleado/create', [EmpleadoController::class, 'create']); */
 
 // Ya accedemos a todos los metodos de la clase EmpleadoControler
-Route::resource('empleado', EmpleadoController::class)->middleware('auth'); // auth, para respetar la autenticacion y no crear empleados sin logearme
+Route::resource('empleado', EmpleadoController::class)->middleware(['auth', 'access']); // auth, para respetar la autenticacion y no crear empleados sin logearme
+Route::resource('admin', AdminController::class)->middleware(['auth', 'admin']);
 
 // desactivamos el registro y el olvide clave
 /* Auth::routes(['register'=>false,'reset'=>false]); */
@@ -36,13 +39,15 @@ Auth::routes(['register'=>true,'reset'=>false]);
 
 // Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
 
-Route::group(['middleware' => 'auth'], function(){
-    Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
+Route::group(['middleware' => ['auth', 'access']], function(){
+    /* Route::get('/home', [EmpleadoController::class, 'index'])->name('home'); */
     Route::get('/', [EmpleadoController::class, 'index'])->name('home');
 });
 
-Route::group(['middleware' => [/* 'auth',  */'admin']], function(){
-    Route::get('/admin', function() {
-        return view('admin.dashboard');
-    });
+Route::group(['middleware' => ['auth', 'admin']], function(){
+    Route::get('/admin', [AdminController::class, 'index'])->name('home');
+});
+
+Route::get('/home', function() {
+    return view('welcome');
 });
