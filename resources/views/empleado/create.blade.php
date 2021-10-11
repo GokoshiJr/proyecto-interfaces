@@ -7,7 +7,7 @@
       @csrf 
       {{-- Incluimos el formulario del otro archivo, le indicamos la ruta a include --}}
       {{-- modo para diferenciar los forms --}}
-      @include('empleado.form', ['modo'=>'Crear'])
+      @include('empleado.form', ['modo'=>'Datos Personales'])
     </form>
   </div>
 @endsection
