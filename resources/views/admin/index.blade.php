@@ -3,72 +3,72 @@
 @section('content')
   <div class="container">
     @if (Session::has('mensaje'))
-    <div class="alert alert-success alert-dismissible" role="alert">
-      
-        {{ Session::get('mensaje') }}
-      
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="false">&times;</span>
-        </button>
-      
+    <div class="alert alert-success alert-dismissible" role="alert">      
+      {{ Session::get('mensaje') }}      
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="false">&times;</span>
+      </button>      
     </div>
-    @endif
-    
-    <a href="{{ url('empleado/create') }}" class="btn btn-success mb-4">Registrar Empleado</a>
-    
+    @endif    
       <div class="row">
         <div class="col-12">
           <table class="table table-striped">
             <thead class="thead">
               <tr>
                 <th scope="col">ID</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Apellido</th>
-                <th scope="col">Cedula</th>
-                <th scope="col">Fecha de Nacimiento</th>
-                <th scope="col">Direccion</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Ciudad</th>
-                <th scope="col">Correo</th>
-                <th scope="col">Clave</th>
-                <th scope="col">Acciones</th>
+                <th scope="col">Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">ID Card</th>
+                <th scope="col">Birth Date</th>
+                <th scope="col">Direction</th>
+                <th scope="col">State</th>
+                <th scope="col">City</th>
+                <th scope="col">Email</th>
+                <th scope="col">Access</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
-              @foreach ($empleados as $empleado)
-                <tr>
-                  <th>{{ $empleado->id }}</th>
-                  <td>{{ $empleado->nombre }}</td>
-                  <td>{{ $empleado->apellido }}</td>
-                  <td>{{ $empleado->cedula }}</td>
-                  <td>{{ $empleado->fecha_nacimiento }}</td>
-                  <td>{{ $empleado->direccion }}</td>
-                  <td>{{ $empleado->estado }}</td>
-                  <td>{{ $empleado->ciudad }}</td>
-                  <td>{{ $empleado->correo }}</td>
-                  <td>{{ $empleado->clave }}</td>
-                  <td>
-                    <a href="{{ url('/empleado/'.$empleado->id.'/edit') }}" class="btn btn-warning">
-                      Editar  
-                    </a> 
-                    <form action="{{ url('/empleado/'.$empleado->id) }}" method="post" class="d-inline">
-                      @csrf
-                      {{ method_field('DELETE') }}
-                      <input class="btn btn-danger" type="submit" value="Borrar" onclick="return confirm('¿Quieres Borrar?')">
-                    </form>
-                  </td>
-                </tr>
+              @foreach ($users as $user)
+                @if ($user->is_admin == 0)
+                  <tr>
+                    
+                    <th>{{ $user->id }}</th>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->last_name }}</td>
+                    <td>{{ $user->id_card }}</td>
+                    <td>{{ $user->birth_date }}</td>
+                    <td>{{ $user->direction }}</td>
+                    <td>{{ $user->state }}</td>
+                    <td>{{ $user->city }}</td>
+                    <td>{{ $user->email }}</td>
+                    @if ($user->access == 1)
+                      <td> True </td>
+                    @else
+                      <td> False</td>
+                    @endif
+                                      
+                    <td>
+                      <form action="{{ url('/admin/'.$user->id) }}" method="post" class="d-inline">
+                        @csrf
+                        {{ method_field('PATCH') }}
+                        <input class="btn btn-primary" type="submit" value="Activate">
+                      </form>                    
+                      <form action="{{ url('/admin/'.$user->id) }}" method="post" class="d-inline">
+                        @csrf
+                        {{ method_field('DELETE') }}
+                        <input class="btn btn-danger" type="submit" value="Eliminate" onclick="return confirm('¿Quieres Borrar?')">
+                      </form>
+                    </td>
+
+                  </tr>
+                @endif                
               @endforeach
             </tbody>
-          </table>
-          @foreach ($users as $user)
-            {{ $user->name }}
-            {{ $user->email }}
-          @endforeach
+          </table>          
           {{-- Paginado --}}
-          {!! $empleados->links() !!}
+          {!! $users->links() !!}
         </div>
-      </div>
-       
+      </div>       
   </div>
 @endsection
