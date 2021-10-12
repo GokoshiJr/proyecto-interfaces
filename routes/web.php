@@ -18,8 +18,12 @@ use Illuminate\Support\Facades\Auth;
 */
 
 // Esta ruta nos direcciona a welcome.blade en la carpeta views
-Route::get('/', function () {
+Route::get('/', function () {    
     return view('auth.login');
+    
+});
+Route::get('/home', function() {
+    return redirect('/');
 });
 
 // Colocamos el nombre de la carpeta y un . para acceder a los archivos dentro
@@ -41,13 +45,13 @@ Auth::routes(['register'=>true,'reset'=>false]);
 
 Route::group(['middleware' => ['auth', 'access']], function(){
     /* Route::get('/home', [EmpleadoController::class, 'index'])->name('home'); */
-    Route::get('/', [EmpleadoController::class, 'index'])->name('home');
+    Route::get('/', [EmpleadoController::class, 'index'])->name('home-empleado');
 });
 
 Route::group(['middleware' => ['auth', 'admin']], function(){
-    Route::get('/admin', [AdminController::class, 'index'])->name('home');
+    Route::get('/', [AdminController::class, 'index'])->name('home-admin');
 });
 
-Route::get('/home', function() {
-    return view('welcome');
-});
+/* Route::get('/home', function() {
+    return view('auth.login');
+}); */

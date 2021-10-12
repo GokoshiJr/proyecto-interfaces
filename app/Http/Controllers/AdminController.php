@@ -15,9 +15,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $datos['empleados'] = Empleado::paginate(5); // Consulta la informacion del modelo en la bd, y se lo pasamos a index.blade
-        $datos['users'] = User::paginate(5);
-        return view('admin.index', $datos);
+        /* $datos['empleados'] = Empleado::paginate(5); */ // Consulta la informacion del modelo en la bd, y se lo pasamos a index.blade
+        $data['users'] = User::paginate(5);
+        return view('admin.index', $data);
     }
 
     /**
@@ -99,7 +99,7 @@ class AdminController extends Controller
     public function update(Request $request, $id)
     {
         // validacion de campos en el formulario
-        $campos = [
+        /* $campos = [
             'nombre'=>'required|string|max:100',
             'apellido'=>'required|string|max:100',
             'cedula'=>'required|integer',
@@ -115,12 +115,12 @@ class AdminController extends Controller
             'required'=>'El :attribute es requerido'
         ];
 
-        $this->validate($request, $campos, $mensaje);
+        $this->validate($request, $campos, $mensaje); */
 
         // Traemos todos los datos menos la llave csrf y el method
-        $datosEmpleado = request()->except(['_token', '_method']);
+        // $datosEmpleado = request()->except(['_token', '_method']);
         // donde el id coincida en la bd actualizamos el empleado        
-        Empleado::where('id', '=', $id)->update($datosEmpleado);
+        User::where('id', '=', $id)->update(['access' => 1]);
 
         // recuperamos el id y nos regresamos a edit
         // $empleado = Empleado::findOrFail($id);
@@ -138,7 +138,8 @@ class AdminController extends Controller
     public function destroy($id)
     {
         //
-        Empleado::destroy($id);
+        // Empleado::destroy($id);
+        User::where('id', '=', $id)->update(['access' => 0]);
         return redirect('admin')->with('mensaje', 'Empleado borrado');
     }
 }
