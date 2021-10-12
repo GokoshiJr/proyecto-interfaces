@@ -17,12 +17,12 @@ class AccessMiddleware
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {        
+    {
         if (Auth::user()->access == 1) {
             return $next($request);
         } else {
             Auth::logout();
-            return redirect('/home');
+            return redirect('login')->with('mensaje', 'has sido baneado');
         }
     }
 }

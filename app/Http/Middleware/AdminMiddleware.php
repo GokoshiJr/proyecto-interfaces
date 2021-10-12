@@ -33,10 +33,10 @@ class AdminMiddleware
             if (Auth::user()->is_admin == 1) {
                 return $next($request);
             } else {
-                return redirect('/');
+                return redirect('/empleado');
             }
         } catch (ErrorException) {
-            return redirect('/');
+            return redirect('/empleado');
         }
     }
 }
