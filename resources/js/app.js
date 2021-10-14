@@ -21,8 +21,6 @@ window.Vue = require('vue').default;
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('registro-component-1', require('./components/RegistroPaso1.vue').default);
-Vue.component('registro-component-2', require('./components/RegistroPaso2.vue').default);
-Vue.component('registro-component-3', require('./components/RegistroPaso3.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

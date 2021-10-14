@@ -161,7 +161,6 @@
 </template>
 
 <script>
-Vue.use(VueFormWizard)
 export default {
   data(){
     return{
