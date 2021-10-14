@@ -58,3 +58,7 @@ Route::group(['middleware' => ['auth', 'admin']], function(){
 Route::get('prueba', function(){
     return view('home');
 });
+Route::post('pruebaPost', function(Request $request){
+    $x = $request->all();
+    return view('');
+});

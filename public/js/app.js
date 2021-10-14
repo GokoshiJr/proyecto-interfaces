@@ -2262,6 +2262,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2270,7 +2272,7 @@ __webpack_require__.r(__webpack_exports__);
         apellido: "",
         cedula: "",
         fecha: "",
-        imagen: "",
+        imagen: null,
         address: "",
         estado: "",
         ciudad: "",
@@ -2289,7 +2291,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     siguiente: function siguiente() {
       if (this.step == 1) {
-        if (this.form.nombre.length > 0 && this.form.apellido.length > 0 && this.form.cedula.length > 0 && this.form.fecha.length > 0) {
+        if (this.form.nombre.length > 0 && this.form.apellido.length > 0 && this.form.cedula.length > 0 && this.form.fecha.length > 0 && this.form.imagen != null) {
           this.errors = [];
           this.step++;
         } else {
@@ -2320,7 +2322,9 @@ __webpack_require__.r(__webpack_exports__);
             })) {
               this.errors.push("Las contrasenas no coinciden");
             }
-          } else {//se envia aqui la info
+          } else {
+            console.log(this.form.confirm_password);
+            console.log(this.form.password); //se envia aqui la info
           }
         } else {
           if (!this.errors.find(function (error) {
@@ -2330,6 +2334,28 @@ __webpack_require__.r(__webpack_exports__);
           }
         }
       }
+    },
+    obtenerImagen: function obtenerImagen(e) {
+      var file = e.target.files[0];
+      this.form.imagen = file;
+      console.log(this.form);
+    },
+    add: function add() {
+      var formData = new FormData();
+      formData.append('nombre', this.form.nombre);
+      formData.append('apellido', this.form.apellido);
+      formData.append('cedula', this.form.cedula);
+      formData.append('fecha', this.form.fecha);
+      formData.append('imagen', this.form.imagen);
+      formData.append('address', this.form.address);
+      formData.append('estado', this.form.estado);
+      formData.append('ciudad', this.form.ciudad);
+      formData.append('email', this.form.email);
+      formData.append('password', this.form.password);
+      formData.append('confirm_password', this.form.confirm_password);
+      axios.post('/pruebaPost', formData).then(function (response) {
+        console.log(response.data);
+      });
     }
   },
   components: {}
@@ -38026,492 +38052,531 @@ var render = function() {
               _c("div", { staticClass: "card-header" }, [_vm._v("Prueba")]),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [
-                _vm.step == 1
-                  ? _c("section", [
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "name" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.nombre,
-                                expression: "form.nombre"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              id: "name",
-                              type: "text",
-                              name: "name",
-                              required: "",
-                              autocomplete: "name",
-                              placeholder: "name",
-                              autofocus: ""
-                            },
-                            domProps: { value: _vm.form.nombre },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                _c(
+                  "form",
+                  {
+                    attrs: { enctype: "multipart/form-data" },
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.add.apply(null, arguments)
+                      }
+                    }
+                  },
+                  [
+                    _vm.step == 1
+                      ? _c("section", [
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "name" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.nombre,
+                                    expression: "form.nombre"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "name",
+                                  type: "text",
+                                  name: "name",
+                                  required: "",
+                                  autocomplete: "name",
+                                  placeholder: "name",
+                                  autofocus: ""
+                                },
+                                domProps: { value: _vm.form.nombre },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "nombre",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "nombre",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(0)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(0)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "last_name" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.apellido,
-                                expression: "form.apellido"
-                              }
-                            ],
-                            staticClass: "form-control ",
-                            attrs: {
-                              id: "last_name",
-                              type: "text",
-                              name: "last_name",
-                              required: "",
-                              checked: "true",
-                              autocomplete: "name",
-                              placeholder: "lastName",
-                              autofocus: ""
-                            },
-                            domProps: { value: _vm.form.apellido },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "last_name" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.apellido,
+                                    expression: "form.apellido"
+                                  }
+                                ],
+                                staticClass: "form-control ",
+                                attrs: {
+                                  id: "last_name",
+                                  type: "text",
+                                  name: "last_name",
+                                  required: "",
+                                  checked: "true",
+                                  autocomplete: "name",
+                                  placeholder: "lastName",
+                                  autofocus: ""
+                                },
+                                domProps: { value: _vm.form.apellido },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "apellido",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "apellido",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(1)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(1)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "id_card" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.cedula,
-                                expression: "form.cedula"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              id: "id_card",
-                              type: "number",
-                              name: "id_card",
-                              placeholder: "id_card",
-                              required: "",
-                              autocomplete: "id_card"
-                            },
-                            domProps: { value: _vm.form.cedula },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "id_card" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.cedula,
+                                    expression: "form.cedula"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "id_card",
+                                  type: "number",
+                                  name: "id_card",
+                                  placeholder: "id_card",
+                                  required: "",
+                                  autocomplete: "id_card"
+                                },
+                                domProps: { value: _vm.form.cedula },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "cedula",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "cedula",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(2)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(2)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "birth_date" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.fecha,
-                                expression: "form.fecha"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              id: "birth_date",
-                              type: "date",
-                              name: "birth_date",
-                              required: "",
-                              placeholder: "birthDate",
-                              autocomplete: "birth_date"
-                            },
-                            domProps: { value: _vm.form.fecha },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "birth_date" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.fecha,
+                                    expression: "form.fecha"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "birth_date",
+                                  type: "date",
+                                  name: "birth_date",
+                                  required: "",
+                                  placeholder: "birthDate",
+                                  autocomplete: "birth_date"
+                                },
+                                domProps: { value: _vm.form.fecha },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "fecha",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(_vm.form, "fecha", $event.target.value)
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(3)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(3)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _vm._m(4)
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.step == 2
-                  ? _c("section", [
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "direction" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
+                          _c("div", { staticClass: "form-group row mb-1" }, [
+                            _c(
+                              "div",
                               {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.address,
-                                expression: "form.address"
-                              }
-                            ],
-                            staticClass: "form-control ",
-                            attrs: {
-                              id: "direction",
-                              type: "text",
-                              name: "direction",
-                              required: "",
-                              placeholder: "address",
-                              autocomplete: "direction"
-                            },
-                            domProps: { value: _vm.form.address },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                                staticClass: "col-md-6 offset-md-4 text-center"
+                              },
+                              [
+                                _c("input", {
+                                  staticClass:
+                                    "btn btn-success form-control-file",
+                                  attrs: { type: "file" },
+                                  on: { change: _vm.obtenerImagen }
+                                })
+                              ]
+                            )
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.step == 2
+                      ? _c("section", [
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "direction" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.address,
+                                    expression: "form.address"
+                                  }
+                                ],
+                                staticClass: "form-control ",
+                                attrs: {
+                                  id: "direction",
+                                  type: "text",
+                                  name: "direction",
+                                  required: "",
+                                  placeholder: "address",
+                                  autocomplete: "direction"
+                                },
+                                domProps: { value: _vm.form.address },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "address",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "address",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(4)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(5)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "state" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.estado,
-                                expression: "form.estado"
-                              }
-                            ],
-                            staticClass: "form-control ",
-                            attrs: {
-                              id: "state",
-                              type: "text",
-                              name: "state",
-                              required: "",
-                              placeholder: "state",
-                              autocomplete: "state"
-                            },
-                            domProps: { value: _vm.form.estado },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "state" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.estado,
+                                    expression: "form.estado"
+                                  }
+                                ],
+                                staticClass: "form-control ",
+                                attrs: {
+                                  id: "state",
+                                  type: "text",
+                                  name: "state",
+                                  required: "",
+                                  placeholder: "state",
+                                  autocomplete: "state"
+                                },
+                                domProps: { value: _vm.form.estado },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "estado",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "estado",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(5)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(6)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "city" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.ciudad,
-                                expression: "form.ciudad"
-                              }
-                            ],
-                            staticClass: "form-control ",
-                            attrs: {
-                              id: "city",
-                              type: "text",
-                              name: "city",
-                              placeholder: "city",
-                              required: "",
-                              autocomplete: "city"
-                            },
-                            domProps: { value: _vm.form.ciudad },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "city" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.ciudad,
+                                    expression: "form.ciudad"
+                                  }
+                                ],
+                                staticClass: "form-control ",
+                                attrs: {
+                                  id: "city",
+                                  type: "text",
+                                  name: "city",
+                                  placeholder: "city",
+                                  required: "",
+                                  autocomplete: "city"
+                                },
+                                domProps: { value: _vm.form.ciudad },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "ciudad",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "ciudad",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(6)
+                            ])
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.step == 3
+                      ? _c("section", [
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "email" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.email,
+                                    expression: "form.email"
+                                  }
+                                ],
+                                staticClass: "form-control ",
+                                attrs: {
+                                  id: "email",
+                                  type: "email",
+                                  name: "email",
+                                  placeholder: "email",
+                                  required: "",
+                                  autocomplete: "email"
+                                },
+                                domProps: { value: _vm.form.email },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "email",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm._m(7)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(7)
-                        ])
-                      ])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.step == 3
-                  ? _c("section", [
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "email" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.email,
-                                expression: "form.email"
-                              }
-                            ],
-                            staticClass: "form-control ",
-                            attrs: {
-                              id: "email",
-                              type: "email",
-                              name: "email",
-                              placeholder: "email",
-                              required: "",
-                              autocomplete: "email"
-                            },
-                            domProps: { value: _vm.form.email },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "password" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.password,
+                                    expression: "form.password"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "password",
+                                  type: "password",
+                                  name: "password",
+                                  required: "",
+                                  placeholder: "password",
+                                  autocomplete: "new-password"
+                                },
+                                domProps: { value: _vm.form.password },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "password",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(_vm.form, "email", $event.target.value)
-                              }
-                            }
-                          }),
+                              }),
+                              _vm._v(" "),
+                              _vm._m(8)
+                            ])
+                          ]),
                           _vm._v(" "),
-                          _vm._m(8)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "password" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.password,
-                                expression: "form.password"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              id: "password",
-                              type: "password",
-                              name: "password",
-                              required: "",
-                              placeholder: "password",
-                              autocomplete: "new-password"
-                            },
-                            domProps: { value: _vm.form.password },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
+                          _c("div", { staticClass: "form-group row" }, [
+                            _c("label", {
+                              staticClass:
+                                "col-md-4 col-form-label text-md-right",
+                              attrs: { for: "password-confirm" }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-6" }, [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.form.confirm_password,
+                                    expression: "form.confirm_password"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  id: "password-confirm",
+                                  type: "password",
+                                  name: "password_confirmation",
+                                  placeholder: "password_confirmation",
+                                  required: "",
+                                  autocomplete: "new-password"
+                                },
+                                domProps: { value: _vm.form.confirm_password },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.form,
+                                      "confirm_password",
+                                      $event.target.value
+                                    )
+                                  }
                                 }
-                                _vm.$set(
-                                  _vm.form,
-                                  "password",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          }),
+                              })
+                            ])
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group row mb-0" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6 offset-md-4 text-right" },
+                        [
+                          _vm.step > 1
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-success",
+                                  on: { click: _vm.regresar }
+                                },
+                                [_vm._v("Regresar")]
+                              )
+                            : _vm._e(),
                           _vm._v(" "),
-                          _vm._m(9)
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-group row" }, [
-                        _c("label", {
-                          staticClass: "col-md-4 col-form-label text-md-right",
-                          attrs: { for: "password-confirm" }
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6" }, [
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.form.confirm_password,
-                                expression: "form.confirm_password"
-                              }
-                            ],
-                            staticClass: "form-control",
-                            attrs: {
-                              id: "password-confirm",
-                              type: "password",
-                              name: "password_confirmation",
-                              placeholder: "password_confirmation",
-                              required: "",
-                              autocomplete: "new-password"
-                            },
-                            domProps: { value: _vm.form.confirm_password },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.$set(
-                                  _vm.form,
-                                  "confirm_password",
-                                  $event.target.value
-                                )
-                              }
-                            }
-                          })
-                        ])
-                      ])
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group row mb-0" }, [
-                  _c(
-                    "div",
-                    { staticClass: "col-md-6 offset-md-4 text-right" },
-                    [
-                      _vm.step > 1
-                        ? _c(
+                          _c(
                             "button",
                             {
-                              staticClass: "btn btn-success",
-                              on: {
-                                click: function($event) {
-                                  return _vm.regresar()
-                                }
-                              }
+                              staticClass: "btn btn-primary",
+                              on: { click: _vm.siguiente }
                             },
-                            [_vm._v("Regresar")]
+                            [
+                              _vm.step < 3
+                                ? _c("div", [_vm._v("Siguiente")])
+                                : _c("div", [_vm._v(" Enviar")])
+                            ]
                           )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary",
-                          on: {
-                            click: function($event) {
-                              return _vm.siguiente()
-                            }
-                          }
-                        },
-                        [
-                          _vm.step < 3
-                            ? _c("div", [_vm._v("Siguiente")])
-                            : _c("div", [_vm._v(" Enviar")])
                         ]
                       )
-                    ]
-                  )
-                ])
+                    ])
+                  ]
+                )
               ])
             ])
           ])
@@ -38561,18 +38626,6 @@ var staticRenderFns = [
       { staticClass: "invalid-feedback", attrs: { role: "alert" } },
       [_c("strong")]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row mb-1" }, [
-      _c("div", { staticClass: "col-md-6 offset-md-4 text-center" }, [
-        _c("button", { staticClass: "btn btn-success" }, [
-          _vm._v("Upload Image")
-        ])
-      ])
-    ])
   },
   function() {
     var _vm = this
