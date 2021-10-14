@@ -16,6 +16,7 @@
             <thead class="thead">
               <tr>
                 <th scope="col">ID</th>
+                <th scope="col">Photo</th>
                 <th scope="col">Name</th>
                 <th scope="col">Last Name</th>
                 <th scope="col">ID Card</th>
@@ -34,7 +35,11 @@
                   <tr>
                     
                     <th>{{ $user->id }}</th>
+                    <td>                      
+                      <img src="{{ asset('storage').'/'.$user->photo }}" alt="" width="150px" height="100px" style="border: 2px solid black;">
+                    </td>
                     <td>{{ $user->name }}</td>
+                    
                     <td>{{ $user->last_name }}</td>
                     <td>{{ $user->id_card }}</td>
                     <td>{{ $user->birth_date }}</td>
@@ -48,16 +53,22 @@
                       <td> False</td>
                     @endif
                                       
-                    <td>
+                    <td>                      
                       <form action="{{ url('/admin/'.$user->id) }}" method="post" class="d-inline">
                         @csrf
                         {{ method_field('PATCH') }}
-                        <input class="btn btn-primary" type="submit" value="Activate">
+                        <input class="btn btn-primary mb-2" type="submit" value="Activate">
                       </form>                    
                       <form action="{{ url('/admin/'.$user->id) }}" method="post" class="d-inline">
                         @csrf
                         {{ method_field('DELETE') }}
-                        <input class="btn btn-danger" type="submit" value="Eliminate" onclick="return confirm('¿Quieres Borrar?')">
+                        <input class="btn btn-warning mb-2" type="submit" value="Deactivate" onclick="return confirm('¿Quieres Desactivar?')">
+                      </form>
+
+                      <form action="{{ url('/empleado/'.$user->id) }}" method="post" class="d-inline">
+                        @csrf
+                        {{ method_field('DELETE') }}
+                        <input class="btn btn-danger mb-2" type="submit" value="Eliminate" onclick="return confirm('¿Quieres Borrar?')">
                       </form>
                     </td>
 

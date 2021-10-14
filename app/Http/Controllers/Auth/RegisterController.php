@@ -54,7 +54,7 @@ class RegisterController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'id_card' => ['required', 'integer'],
             'birth_date'=> ['required', 'date'],
-            /* 'photo'=> ['required', 'file'], */
+            'photo'=>['required','max:10000','mimes:jpeg,png,jpg'],
 
             'direction' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
@@ -73,12 +73,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if ($data['photo']) {
+            $data['photo'] = $data['photo']->store('uploads', 'public');
+        }
+
         return User::create([
             'name' => $data['name'],
             'last_name' => $data['last_name'],
             'id_card' => $data['id_card'],
             'birth_date' => $data['birth_date'],
-            /* 'photo' => $data['photo'], */
+            'photo' => $data['photo'],
 
             'direction' => $data['direction'],
             'state' => $data['state'],

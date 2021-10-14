@@ -22,7 +22,7 @@ class User extends Authenticatable
         'last_name',
         'id_card',
         'birth_date',
-        /* 'photo', */
+        'photo',
 
         'direction',
         'state',

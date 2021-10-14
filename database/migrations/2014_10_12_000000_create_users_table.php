@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->integer('id_card');
             $table->date('birth_date');
-            /* $table->file('photo'); */
+            $table->string('photo');
 
             $table->string('direction');
             $table->string('state');

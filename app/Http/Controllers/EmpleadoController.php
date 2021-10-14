@@ -19,7 +19,7 @@ class EmpleadoController extends Controller
         // $datos['empleados'] = Empleado::paginate(5); // Consulta la informacion del modelo en la bd, y se lo pasamos a index.blade
         // $datos['users'] = User::paginate(5);
         // session(['mensaje'=>'bienvenido']);
-        $datos['user'] = Auth::user();
+        $datos['empleado'] = Auth::user();
         return view('empleado.index', $datos);
     }
 
@@ -63,6 +63,9 @@ class EmpleadoController extends Controller
 
         // $datosEmpleado = request()->all(); trae todos los datos       
         $datosEmpleado = request()->except('_token'); // Traemos todos los datos menos la llave csrf
+        if ($request-> hasFile('photo')) {
+            $datosEmpleado['photo'] = $request->file('photo')->store('uploads', 'public');
+        }
         Empleado::insert($datosEmpleado); // inserta la info en la base de datos
         // return response()->json($datosEmpleado);
         // Empleado::update()
@@ -113,12 +116,13 @@ class EmpleadoController extends Controller
             'last_name'=>'required|string|max:100',
             'id_card'=>'required|integer',
             'birth_date'=>'required|date',
+            'photo'=>'max:10000|mimes:jpeg,png,jpg',            
             'direction'=>'required|string|max:200',
             'state'=>'required|string|max:100',
             'city'=>'required|string|max:100',
             'email'=>'required|email',
             'password'=>'required|string|max:100',
-            
+            'password_confirmation'=>'required|string|max:100'            
         ];
 
         $mensaje = [
@@ -126,22 +130,19 @@ class EmpleadoController extends Controller
         ];
 
         $this->validate($request, $campos, $mensaje);
-
-        // Traemos todos los datos menos la llave csrf y el method
+        
+        // Traemos todos los datos menos la llave csrf, el method y el password_confirmation
         $datosEmpleado = request()->except(['_token', '_method', 'password_confirmation']);
-        // donde el id coincida en la bd actualizamos el empleado        
-        /* Empleado::where('id', '=', $id)->update($datosEmpleado); */
-        // Auth::user()->update($datosEmpleado);
+
+        if ($request->hasFile('photo')) 
+        {
+            $datosEmpleado['photo'] = $request['photo']->store('uploads', 'public');
+        }
+        
         $datosEmpleado['password'] = bcrypt($datosEmpleado['password']);
         User::where('id', '=', $id)->update($datosEmpleado);
         
-        
-
-        // recuperamos el id y nos regresamos a edit
-        // $empleado = Empleado::findOrFail($id);
-        // return view('empleado.edit', compact('empleado'));
         return redirect('empleado')->with('mensaje', 'Empleado editado con exito');
-        // return redirect('empleado');
     }
 
     /**
@@ -153,7 +154,7 @@ class EmpleadoController extends Controller
     public function destroy($id)
     {
         //
-        /* Empleado::destroy($id);
-        return redirect('empleado')->with('mensaje', 'Empleado borrado'); */
+        User::destroy($id);
+        return redirect('/')->with('mensaje', 'Empleado borrado');
     }
 }
