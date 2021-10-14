@@ -55,3 +55,6 @@ Route::group(['middleware' => ['auth', 'admin']], function(){
 /* Route::get('/home', function() {
     return view('auth.login');
 }); */
+Route::get('prueba', function(){
+    return view('home');
+});

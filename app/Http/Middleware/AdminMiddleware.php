@@ -35,7 +35,7 @@ class AdminMiddleware
             } else {
                 return redirect('/empleado');
             }
-        } catch (ErrorException) {
+        } catch (ErrorException $e) {
             return redirect('/empleado');
         }
     }
