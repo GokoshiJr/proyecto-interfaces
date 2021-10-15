@@ -5,6 +5,7 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,5 @@ Route::get('prueba', function(){
     return view('home');
 });
 Route::post('pruebaPost', function(Request $request){
-    $x = $request->all();
-    return view('');
+    return $request->all();
 });

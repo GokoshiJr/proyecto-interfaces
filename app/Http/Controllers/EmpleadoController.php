@@ -42,6 +42,7 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
         // validacion de campos en el formulario
         $campos = [
             'nombre'=>'required|string|max:100',
