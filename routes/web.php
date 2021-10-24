@@ -59,6 +59,9 @@ Route::group(['middleware' => ['auth', 'admin']], function(){
 Route::get('prueba', function(){
     return view('home');
 });
-Route::post('pruebaPost', function(Request $request){
-    return $request->all();
+Route::post('/test', function(Request $request){
+    return $request;
 });
+
+// testeo de peticiones desde vue a laravel 
+Route::put('/empleado', [EmpleadoController::class, 'post_store']);

@@ -26,6 +26,13 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
+                @guest
+                @else
+                    @if (Auth::user()->is_admin)
+                        <a class="navbar-brand" href="{{ url('/admin') }}">{{ __('Lista Empleados') }}</a>
+                    @endif
+                @endguest
+                
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -57,12 +64,20 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     
                                     <a class="dropdown-item" href="{{ url('empleado/'.Auth::user()->id.'/edit') }}">
-                                        {{ __('Editar Datos') }}
+                                        {{ __('Editar Perfil') }}
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ url('/empleado') }}">
+                                        {{ __('Editar Foto') }}
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ url('/empleado') }}">
+                                        {{ __('Ver Perfil') }}
                                     </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                            document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 

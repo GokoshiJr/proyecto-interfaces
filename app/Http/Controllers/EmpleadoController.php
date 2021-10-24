@@ -15,10 +15,7 @@ class EmpleadoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        // $datos['empleados'] = Empleado::paginate(5); // Consulta la informacion del modelo en la bd, y se lo pasamos a index.blade
-        // $datos['users'] = User::paginate(5);
-        // session(['mensaje'=>'bienvenido']);
+    {   
         $datos['empleado'] = Auth::user();
         return view('empleado.index', $datos);
     }
@@ -42,36 +39,7 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
-        // validacion de campos en el formulario
-        $campos = [
-            'nombre'=>'required|string|max:100',
-            'apellido'=>'required|string|max:100',
-            'cedula'=>'required|integer',
-            'fecha_nacimiento'=>'required|date',
-            'direccion'=>'required|string|max:200',
-            'estado'=>'required|string|max:100',
-            'ciudad'=>'required|string|max:100',
-            'correo'=>'required|email',
-            'clave'=>'required|string|max:100'
-        ];
-
-        $mensaje = [
-            'required'=>'El :attribute es requerido'
-        ];
-
-        $this->validate($request, $campos, $mensaje);
-
-        // $datosEmpleado = request()->all(); trae todos los datos       
-        $datosEmpleado = request()->except('_token'); // Traemos todos los datos menos la llave csrf
-        if ($request-> hasFile('photo')) {
-            $datosEmpleado['photo'] = $request->file('photo')->store('uploads', 'public');
-        }
-        Empleado::insert($datosEmpleado); // inserta la info en la base de datos
-        // return response()->json($datosEmpleado);
-        // Empleado::update()
-        // ya no mostramos un json, sino que redireccionamos y mostramos un mensaje
-        return redirect('empleado')->with('mensaje', 'Empleado agregado con exito');
+        //
     }
 
     /**
@@ -93,13 +61,8 @@ class EmpleadoController extends Controller
      */
     public function edit($id)
     {
-        // $empleado = User::findOrFail($id);
-        
         $empleado = Auth::user();
-        return view('empleado.edit', compact('empleado'));
-        
-
-        
+        return view('home', compact('empleado'));
     }
 
     /**
@@ -157,5 +120,27 @@ class EmpleadoController extends Controller
         //
         User::destroy($id);
         return redirect('/')->with('mensaje', 'Empleado borrado');
+    }
+
+    public function post_store(Request $request)
+    {   
+        // validacion de campos en el formulario
+        $campos = [
+            'name'=>'required|string|max:100',
+            'last_name'=>'required|string|max:100',
+            'id_card'=>'required|integer',
+            'direction'=>'required|string|max:200',
+            'state'=>'required|string|max:100',
+            'city'=>'required|string|max:100',
+        ];
+
+        $mensaje = [
+            'required'=>'El :attribute es requerido'
+        ];
+
+        $this->validate($request, $campos, $mensaje);
+        $datosEmpleado = request()->except(['_token', '_method', 'password_confirmation']);
+        User::where('id', '=', $request->id)->update($datosEmpleado);
+        return redirect('empleado')->with('mensaje', 'Datos editados con exito');
     }
 }
