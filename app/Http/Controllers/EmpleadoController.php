@@ -6,6 +6,7 @@ use App\Models\Empleado;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class EmpleadoController extends Controller
 {
@@ -62,7 +63,7 @@ class EmpleadoController extends Controller
     public function edit($id)
     {
         $empleado = Auth::user();
-        return view('home', compact('empleado'));
+        return view('empleado.edit', compact('empleado'));
     }
 
     /**
@@ -96,17 +97,31 @@ class EmpleadoController extends Controller
         $this->validate($request, $campos, $mensaje);
         
         // Traemos todos los datos menos la llave csrf, el method y el password_confirmation
-        $datosEmpleado = request()->except(['_token', '_method', 'password_confirmation']);
+        $datosEmpleado = request()->except(['_token', '_method', "password_confirmation"]);
 
         if ($request->hasFile('photo')) 
         {
             $datosEmpleado['photo'] = $request['photo']->store('uploads', 'public');
         }
+
+        // $aux = Hash::check($datosEmpleado['password_confirmation'], Auth::user()->password);
         
-        $datosEmpleado['password'] = bcrypt($datosEmpleado['password']);
+        /* if ($datosEmpleado['password'] == $datosEmpleado['password_confirmation']) 
+        {
+            $datosEmpleado['password'] = bcrypt($datosEmpleado['password']);
+            $datosEmpleado['password_confirmation'] = bcrypt($datosEmpleado['password_confirmation']);
+            return redirect('empleado')->with('mensaje', 'buena esa sapo');
+        }
+        else
+        {
+            
+            return redirect('empleado/'.Auth::user()->id.'/edit')->with('mensaje', 'error'); 
+        } */
+        
+        
         User::where('id', '=', $id)->update($datosEmpleado);
         
-        return redirect('empleado')->with('mensaje', 'Empleado editado con exito');
+        return redirect('empleado')->with('mensaje', "Editado exitoso");
     }
 
     /**

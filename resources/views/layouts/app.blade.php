@@ -30,6 +30,8 @@
                 @else
                     @if (Auth::user()->is_admin)
                         <a class="navbar-brand" href="{{ url('/admin') }}">{{ __('Lista Empleados') }}</a>
+                    @else
+                        <a class="navbar-brand" href="{{ url('/programa/create') }}">{{ __('Registrar Programa') }}</a>
                     @endif
                 @endguest
                 
@@ -63,16 +65,16 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     
-                                    <a class="dropdown-item" href="{{ url('empleado/'.Auth::user()->id.'/edit') }}">
-                                        {{ __('Editar Perfil') }}
-                                    </a>
-
-                                    <a class="dropdown-item" href="{{ url('/empleado') }}">
-                                        {{ __('Editar Foto') }}
-                                    </a>
-
                                     <a class="dropdown-item" href="{{ url('/empleado') }}">
                                         {{ __('Ver Perfil') }}
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ url('/programa') }}">
+                                        {{ __('Mis Programas') }}
+                                    </a>
+
+                                    <a class="dropdown-item" href="{{ url('empleado/'.Auth::user()->id.'/edit') }}">
+                                        {{ __('Editar Perfil') }}
                                     </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"

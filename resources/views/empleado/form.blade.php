@@ -1,20 +1,28 @@
 {{-- como usamos el mismo formulario en create, alli no tenemos ningun dato que mostrar, por lo tanto vamos a validar esa condicion con un isset, isset($empleado->nombre)?$empleado->nombre:"", si existe muestralo sino espacio en blanco --}}
 
-@if (count($errors)>0)
-  <div class="alert alert-danger" role="alert">
-    <ul>
-      @foreach ($errors->all() as $error)
-        <li>
-          {{ $error }}
-        </li>
-      @endforeach
-    </ul>
-  </div>
-@endif
-
 <div class="container">
+  
   <div class="row justify-content-center">
     <div class="col-md-8">
+      @if (Session::has('mensaje'))
+        <div class="alert alert-success alert-dismissible" role="alert">      
+            {{ Session::get('mensaje') }}      
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="false">&times;</span>
+            </button>      
+        </div>
+      @endif
+      @if (count($errors)>0)
+        <div class="alert alert-danger" role="alert">
+          <ul>
+            @foreach ($errors->all() as $error)
+              <li>
+                {{ $error }}
+              </li>
+            @endforeach
+          </ul>
+        </div>
+      @endif
       <div class="card">
         <div class="card-header">{{ $modo }}</div>
         <div class="card-body">          

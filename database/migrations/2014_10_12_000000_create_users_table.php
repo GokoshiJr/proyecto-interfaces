@@ -14,7 +14,8 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            /* $table->engine='InnoDB'; */
+            $table->bigIncrements('id');
 
             $table->string('name');
             $table->string('last_name');
@@ -36,6 +37,22 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        Schema::create('programas', function (Blueprint $table) {
+            /* $table->engine='InnoDB'; */
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('type');
+            $table->string('photo_1');
+            $table->string('photo_2');
+            $table->string('photo_3');
+            $table->string('language');
+            $table->string('library');
+            $table->string('plugin');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -46,5 +63,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('programas');
     }
 }

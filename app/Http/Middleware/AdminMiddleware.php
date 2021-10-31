@@ -6,7 +6,6 @@ use Closure;
 use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PhpParser\Node\Stmt\TryCatch;
 
 class AdminMiddleware
 {
@@ -19,16 +18,6 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        /* if (auth()->check() && auth()->user()->is_admin)
-        {
-            return $next($request);
-        } 
-        
-        return redirect('/'); */
-        /* if ($request -> is_admin == null) 
-        {
-            return redirect('/');
-        } */
         try {
             if (Auth::user()->is_admin == 1) {
                 return $next($request);
