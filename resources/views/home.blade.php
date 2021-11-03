@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
 @section('content')
 
@@ -14,7 +14,7 @@
   </div>
 @endif
 
-<div class="container">
+{{-- <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div id="app">
@@ -32,5 +32,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
