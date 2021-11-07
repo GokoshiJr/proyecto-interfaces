@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProgramaController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -70,3 +71,16 @@ Route::post('/test', function(Request $request){
 
 // testeo de peticiones desde vue a laravel 
 Route::put('/empleado', [EmpleadoController::class, 'post_store']);
+
+/* Route::get('{path}', [HomeController::class, 'index'])->where('path', '([A-z\d-\/_.]+)?'); */
+Route::get('/dashboard', function() {
+    return view('layouts.master');
+});
+
+Route::get('/profile', function() {
+    return view('layouts.master');
+});
+
+Route::get('/usuarios', function() {
+    return view('layouts.master');
+});

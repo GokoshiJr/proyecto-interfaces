@@ -13,10 +13,12 @@ Vue.use(VueRouter)
 
 const routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue').default },
-    { path: '/profile', component: require('./components/Profile.vue').default }
+    { path: '/profile', component: require('./components/Profile.vue').default },
+    { path: '/usuarios', component: require('./components/Usuarios.vue').default }
 ]
 
 const router = new VueRouter({
+    mode: 'history',
     routes // short for `routes: routes`
 })
 
@@ -32,8 +34,6 @@ const router = new VueRouter({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('registro-component-1', require('./components/ExampleComponent.vue').default);
-Vue.component(require('./components/Profile.vue').default);
-// Vue.component('registro-component-1', require('./components/RegistroPaso1.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
