@@ -8,7 +8,26 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 
-import VueRouter from 'vue-router'
+import Form from 'vform';
+window.Form = Form;
+
+import {
+    Button,
+    HasError,
+    AlertError,
+    AlertErrors,
+    AlertSuccess
+  } from 'vform/src/components/bootstrap5'
+  // 'vform/src/components/bootstrap4'
+  // 'vform/src/components/tailwind'
+  
+  Vue.component(Button.name, Button)
+  Vue.component(HasError.name, HasError)
+  Vue.component(AlertError.name, AlertError)
+  Vue.component(AlertErrors.name, AlertErrors)
+  Vue.component(AlertSuccess.name, AlertSuccess)
+
+import VueRouter from 'vue-router';
 Vue.use(VueRouter)
 
 const routes = [
