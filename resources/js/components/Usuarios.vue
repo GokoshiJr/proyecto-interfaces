@@ -114,6 +114,11 @@
                 <input id="password" v-model="form.password" type="password" name="password" class="form-control" placeholder="Clave">
                 <HasError :form="form" field="password" />
               </div>
+              <!-- Clave confirmacion -->
+              <div class="mb-3 form-group">
+                <input id="password_confirmation" v-model="form.password_confirmation" type="password" name="password_confirmation" class="form-control" placeholder="Clave">
+                <HasError :form="form" field="password_confirmation" />
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Salir</button>
@@ -140,7 +145,8 @@ export default {
         state:'',
         city:'',
         email:'',
-        password:''
+        password:'',
+        password_confirmation:''
       })
     }
   },
