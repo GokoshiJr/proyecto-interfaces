@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::paginate(5);
+        return User::latest()->paginate(5);
     }
 
     /**
@@ -95,6 +95,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        // delete the user
+        $user->delete();
+        return ['message' => 'User Deleted'];
+
     }
 }
