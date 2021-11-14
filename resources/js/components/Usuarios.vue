@@ -19,17 +19,22 @@
                 <tr>
                   <th>ID</th>
                   <th>User</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Reason</th>
+                  <th>ID Card</th>
+                  <th>Birth Date</th>
+                  <th>Photo</th>
+                  <th>Email</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>183</td>
-                  <td>John Doe</td>
-                  <td>11-7-2014</td>
-                  <td><span class="tag tag-success">Approved</span></td>
+                
+                <tr v-for="user in users" :key="user.id">
+                  
+                  <td> {{ user.id }} </td>
+                  <td> {{ user.name | upText}} {{ user.last_name | upText}} </td>
+                  <td> {{ user.id_card }} </td>
+                  <td> {{ user.birth_date | myDate}} </td>
+                  <td> {{ user.photo }} </td>
+                  <td> {{ user.email }} </td>
                   <td>
                     <a href="#">
                       <i class="fa fa-edit blue"></i>
@@ -49,7 +54,7 @@
       </div>
     </div>
     <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="addNewLabel">Modal title</h5>
@@ -135,6 +140,7 @@
 export default {
   data() {
     return {
+      users: {},
       form: new Form({
         name:'',
         last_name:'',
@@ -151,13 +157,29 @@ export default {
     }
   },
   methods: {
+    loadUsers() {
+      axios.get('api/user').then(({data}) => this.users = data.data);
+    },
     async createUser() {
+      this.$Progress.start()
       const res = await this.form.post('api/user');
-      console.log(res);
+
+      // para esconder el modal luego de lanzar la peticion post
+      $('#addNew').modal('hide')
+
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'User created in successfully!',
+        showConfirmButton: false,
+        timer: 2000
+      })
+
+      this.$Progress.finish()
     }
   },
-  mounted() {
-    console.log('component mounted')
+  created() {
+    this.loadUsers();
   },
 }
 </script>

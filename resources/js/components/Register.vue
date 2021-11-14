@@ -95,12 +95,14 @@
               <!-- buttons -->
               <div class="row">
                 <div class="btn-group col-8">
-                  <div v-if="step > 0">
-                    <button class="btn btn-success m-1" type="button" @click="regresar">Regresar</button>
-                  </div>
                   <div v-if="step < 2">
                     <button class="btn btn-primary m-1" type="button" @click="siguiente">Siguiente</button>
                   </div>
+                  <div v-if="step > 0">
+                    <button class="btn btn-success m-1" type="button" @click="regresar">Regresar</button>
+                  </div>
+                </div>
+                <div class="btn-group col-4">
                   <div v-if="step == 2"> 
                     <button class="btn btn-primary m-1" type="submit">Enviar</button>
                   </div>
@@ -158,6 +160,9 @@
       async createUser() {
         const res = await this.form.post('api/user');
         console.log(res);
+        if (res.status === 201) {
+          window.location.href = "/login"
+        }
         // this.$router.push({ name: '/profile'})
       }
     },
