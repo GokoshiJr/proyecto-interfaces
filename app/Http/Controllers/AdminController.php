@@ -17,7 +17,7 @@ class AdminController extends Controller
     {
         /* $datos['empleados'] = Empleado::paginate(5); */ // Consulta la informacion del modelo en la bd, y se lo pasamos a index.blade
         $data['users'] = User::paginate(5);
-        return view('admin.index', $data);
+        return $data;
     }
 
     /**

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
-
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Intervention\Image\ImageManagerStatic as Image;
 
-class UserController extends Controller
+class UserRegisterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::latest()->paginate(5);
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -27,28 +36,36 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        
+        /* return $request; */
+        if ($request->photo != 'default') {
+            $name_photo = time().'.'.explode('/', explode(':', substr($request->photo,0,strpos($request->photo, ';')))[1])[1];
+            Image::make($request->photo)->save(public_path('./img/users/').$name_photo);
+        } else {
+            $name_photo = 'default.png';
+        }
+
         $campos = [
             'name'      => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'id_card'   => ['required', 'integer'],
             'birth_date'=> ['required', 'date'],
-            'photo'     => ['required', 'string', 'max:10000'/* ,'mimes:jpeg,png,jpg' */],
+            'photo'     => ['string'],
             'direction' => ['required', 'string', 'max:255'],
             'state'     => ['required', 'string', 'max:255'],
             'city'      => ['required', 'string', 'max:255'],            
             'email'     => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'  => ['required', 'string', 'min:8', 'confirmed'],
         ];
-        
 
         $mensaje = [
-            'required'=>'The :attribute is required.'
+            'required'=>'Se requiere :attribute'
         ];
 
         $this->validate($request, $campos, $mensaje);
 
         $request = request()->except(["password_confirmation"]);
+
+        $request['photo'] = $name_photo;
 
         return User::create([
             'name'       => $request['name'],
@@ -62,6 +79,8 @@ class UserController extends Controller
             'email'      => $request['email'],
             'password'   => Hash::make($request['password']),
         ]);
+
+        return 'Usuario creado con exito';
     }
 
     /**
@@ -71,6 +90,17 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }
@@ -95,10 +125,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        // delete the user
-        $user->delete();
-        return ['message' => 'User Deleted'];
-
+        //
     }
 }

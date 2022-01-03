@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\ImageManagerStatic as Image;
+
 
 class ProgramaController extends Controller
 {
@@ -17,9 +19,11 @@ class ProgramaController extends Controller
      */
     public function index()
     {
-        $data['user_id'] = Auth::user()->id;        
+        $data['user_id'] = Auth::user()->id;
+
         $data['programas'] = Programa::where('user_id', '=', $data['user_id'])->paginate(5);
-        return view('programa.index', $data);
+
+        return $data;
     }
 
     /**
@@ -29,10 +33,7 @@ class ProgramaController extends Controller
      */
     public function create()
     {   
-        $data['user'] = Auth::user();
-        $data['programa'] = "";
-        
-        return view('programa.create', $data);
+        //
     }
 
     /**
@@ -45,15 +46,14 @@ class ProgramaController extends Controller
     {
         // validacion de campos en el formulario
         $campos = [
-            'name'=>'required|string|max:100',
-            'type'=>'required|string|max:100',
-            'photo_1'=>'required|string|max:100',
-            'photo_2'=>'required|string|max:100',
-            'photo_3'=>'required|string|max:100',
-            'language'=>'required|string|max:100',
-            'library'=>'required|string|max:100',
-            'plugin'=>'required|string|max:100',
-            
+            'name'     =>'required|string|max:100',
+            'type'     =>'required|string|max:100',
+            /* 'photo_1'  =>'required|mimes:jpeg,png,jpg',
+            'photo_2'  =>'required|mimes:jpeg,png,jpg',
+            'photo_3'  =>'required|mimes:jpeg,png,jpg', */
+            'language' =>'required|string|max:100',
+            'library'  =>'required|string|max:100',
+            'plugin'   =>'required|string|max:100',
         ];
 
         $mensaje = [
@@ -62,14 +62,30 @@ class ProgramaController extends Controller
 
         $this->validate($request, $campos, $mensaje);
 
+        if ($request->photo_1) {
+            $name_photo = time().'.'.explode('/', explode(':', substr($request->photo_1,0,strpos($request->photo_1, ';')))[1])[1];
+            Image::make($request->photo_1)->save(public_path('./img/test/').$name_photo);
+        }
+
+        if ($request->photo_2) {
+            $name_photo_2 = time().'.'.explode('/', explode(':', substr($request->photo_2,0,strpos($request->photo_2, ';')))[1])[1];
+            Image::make($request->photo_2)->save(public_path('./img/test/').$name_photo_2);
+        }
+
+        if ($request->photo_3) {
+            $name_photo_3 = time().'.'.explode('/', explode(':', substr($request->photo_3,0,strpos($request->photo_3, ';')))[1])[1];
+            Image::make($request->photo_3)->save(public_path('./img/test/').$name_photo_3);
+        }
+
         // $datosEmpleado = request()->all(); trae todos los datos       
         $datosEmpleado = request()->except('_token'); // Traemos todos los datos menos la llave csrf
         // return response()->json($datosEmpleado);
+        $datosEmpleado['photo_1'] = $name_photo;
+        $datosEmpleado['photo_2'] = $name_photo_2;
+        $datosEmpleado['photo_3'] = $name_photo_3;
         Programa::insert($datosEmpleado); // inserta la info en la base de datos
         // return response()->json($datosEmpleado);
-
-        // ya no mostramos un json, sino que redireccionamos y mostramos un mensaje
-        return redirect('/programa')->with('mensaje', 'Programa agregado con exito');
+        return redirect('/dashboard');
     }
 
     /**
@@ -91,11 +107,7 @@ class ProgramaController extends Controller
      */
     public function edit($id)
     {
-        $programa = Programa::findOrFail($id);
-        if ($programa->user_id != Auth::user()->id) {
-            return redirect('/programa');
-        }
-        return view('programa.edit', compact('programa'));
+        //
     }
 
     /**
@@ -107,34 +119,43 @@ class ProgramaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // validacion de campos en el formulario
-        $campos = [
-            'name'=>'required|string|max:100',
-            'type'=>'required|string|max:100',
-            'photo_1'=>'required|string|max:100',
-            'photo_2'=>'required|string|max:100',
-            'photo_3'=>'required|string|max:100',
-            'language'=>'required|string|max:100',
-            'library'=>'required|string|max:100',
-            'plugin'=>'required|string|max:100',
+        $programa = Programa::findOrFail($id);
+        
+        if ($programa->photo_1 != $request->photo_1) 
+        {
+            $name_photo = time().'.'.explode('/', explode(':', substr($request->photo_1,0,strpos($request->photo_1, ';')))[1])[1];
+            Image::make($request->photo_1)->save(public_path('./img/test/').$name_photo);
+            $data = request()->all();
+            $data['photo_1'] = $name_photo;
             
-        ];
+        } else {
+            $data = request()->all();
+        }
 
-        $mensaje = [
-            'required'=>'El :attribute es requerido'
-        ];
+        if ($programa->photo_2 != $request->photo_2) 
+        {   
+            $name_photo_2 = time().'.'.explode('/', explode(':', substr($request->photo_2,0,strpos($request->photo_2, ';')))[1])[1];
+            Image::make($request->photo_2)->save(public_path('./img/test/').$name_photo_2);
+            $data = request()->all();
+            $data['photo_2'] = $name_photo_2;
+            
+        } else {
+            $data = request()->all();
+        }
 
-        $this->validate($request, $campos, $mensaje);
-
-        // $datosEmpleado = request()->all(); trae todos los datos       
-        $datosEmpleado = request()->except('_token', '_method'); // Traemos todos los datos menos la llave csrf
-        // return response()->json($datosEmpleado);
-        Programa::where('id', '=', $id)->update($datosEmpleado);
-        // inserta la info en la base de datos
-        // return response()->json($datosEmpleado);
-
-        // ya no mostramos un json, sino que redireccionamos y mostramos un mensaje
-        return redirect('/programa')->with('mensaje', 'Programa actualizado con exito');
+        if ($programa->photo_3 != $request->photo_3) 
+        {   
+            $name_photo_3 = time().'.'.explode('/', explode(':', substr($request->photo_3,0,strpos($request->photo_3, ';')))[1])[1];
+            Image::make($request->photo_3)->save(public_path('./img/test/').$name_photo_3);
+            $data = request()->all();
+            $data['photo_3'] = $name_photo_3;
+        } else {
+            $data = request()->all();
+        }
+        
+        
+        Programa::where('id', '=', $id)->update($data);
+        return "Actualizado";
     }
 
     /**
@@ -146,6 +167,7 @@ class ProgramaController extends Controller
     public function destroy($id)
     {
         Programa::destroy($id);
-        return redirect('/programa')->with('mensaje', 'Programa eliminado con exito');
+
+        return "Eliminado";
     }
 }
