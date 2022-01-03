@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div class="hold-transition register-page">
-      <div class="register-box">
+    
         <div class="card card-outline card-primary">
           <div class="card-header text-center">
             <h1><b>Registro</b></h1>
@@ -10,87 +9,90 @@
             <form @submit.prevent="createUser">
               <section v-if="step==0">
                 <!-- name -->
-                <div class="mb-3 input-group">
-                  <input id="name" v-model="form.name" type="text" name="name" class="form-control" placeholder="Nombre">
-                  <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-user"></span>
-                    </div>
-                  </div>
+                <div class="mb-3 form-floating">
+                  <label for="name">Nombre</label>
+                  <input id="name" v-model="form.name" type="text" name="name" class="form-control" placeholder="">
                   <HasError :form="form" field="name" />
                 </div>
                 <!-- last_name -->
-                <div class="mb-3 input-group">
-                  <input id="last_name" v-model="form.last_name" type="text" name="last_name" class="form-control" placeholder="Apellido">
-                  <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-user"></span>
-                    </div>
-                  </div>
+                <div class="mb-3 form-floating">
+                  <label for="last_name">Apellido</label>
+                  <input id="last_name" v-model="form.last_name" type="text" name="last_name" class="form-control" placeholder="">
                   <HasError :form="form" field="last_name" />
                 </div>
                 <!-- id_card -->
-                <div class="mb-3 input-group">
-                  <input id="id_card" v-model="form.id_card" type="number" name="id_card" class="form-control" placeholder="Cedula">
-                  <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-user"></span>
-                    </div>
-                  </div>
+                <div class="mb-3 form-floating">
+                  <label for="id_card">Cedula</label>
+                  <input id="id_card" v-model="form.id_card" type="number" name="id_card" class="form-control" placeholder="">
                   <HasError :form="form" field="id_card" />
                 </div>
               </section>
               <section v-if="step==1">
                 <!-- birth_date -->
-                <div class="mb-3 input-group">
+                <div class="mb-3 form-floating">
+                  <label for="birth_date">Fecha de Nacimiento</label>
                   <input id="birth_date" v-model="form.birth_date" type="date" name="birth_date" class="form-control" placeholder="Fecha de Nacimiento">
                   <HasError :form="form" field="birth_date" />
                 </div>    
                 <!-- direction -->
                 <div class="mb-3 form-group">
-                  <textarea id="direction" v-model="form.direction" type="text" name="direction" class="form-control" placeholder="Direccion" rows="2"></textarea>
+                  <label for="direction">Direccion</label>
+                  <textarea id="direction" v-model="form.direction" type="text" name="direction" class="form-control" placeholder="" rows="2"></textarea>
                   <HasError :form="form" field="direction" />
                 </div>
                 <!-- state -->
                 <div class="mb-3 form-group">
-                  <select id="state" v-model="form.state" type="text" name="state" class="form-control" placeholder="Estado">
+                  <label for="state">Estado</label>
+                  <select id="state" v-model="form.state" type="text" name="state" class="form-control" placeholder="">
                     <option value="">Seleccione un Estado</option>
                     <option value="Carabobo">Carabobo</option>
                     <option value="Aragua">Aragua</option>
+                    <option value="Tachira">Tachira</option>
+                    <option value="Zulia">Zulia</option>
+                    <option value="Lara">Lara</option>
                   </select>
                   <HasError :form="form" field="state" />
                 </div>
                 <!-- city -->
                 <div class="mb-3 form-group">
-                  <input id="city" v-model="form.city" type="text" name="city" class="form-control" placeholder="Ciudad">
-                  <div class="input-group-append">
-                    <div class="input-group-text">
-                      <span class="fas fa-user"></span>
-                    </div>
-                  </div>
+                  <label for="city">Ciudad</label>
+                  <select id="city" v-model="form.city" type="text" name="city" class="form-control">
+                    <option value="">Seleccione una ciudad</option>
+                    <option value="Valencia">Valencia</option>
+                    <option value="Maracay">Maracay</option>
+                    <option value="San Cristobal">San Cristobal</option>
+                    <option value="Maracaibo">Maracaibo</option>
+                    <option value="Barquisimeto">Barquisimeto</option>
+                  </select>
                   <HasError :form="form" field="city" />
                 </div>
               </section>
               <section v-if="step==2">
+                <div class="mb-3 form-group">
+                  <label for="photo">Foto(Opcional)</label>
+                  <input id="photo" @change="updatePhoto" type="file" name="photo" class="form-control" >
+                  <HasError :form="form" field="photo" />
+                </div>
+
                 <!-- Email -->
                 <div class="mb-3 form-group">
-                  <input id="email" v-model="form.email" type="email" name="email" class="form-control" placeholder="Correo">
+                  <label for="email">Correo</label>
+                  <input id="email" v-model="form.email" type="email" name="email" class="form-control" placeholder="">
                   <HasError :form="form" field="email" />
                 </div>
                 <!-- Clave -->
                 <div class="mb-3 form-group">
-                  <input id="password" v-model="form.password" type="password" name="password" class="form-control" placeholder="Clave">
+                  <label for="password">Clave</label>
+                  <input id="password" v-model="form.password" type="password" name="password" class="form-control" placeholder="">
                   <HasError :form="form" field="password" />
                 </div>
                 <!-- Clave confirmacion -->
                 <div class="mb-3 form-group">
-                  <input id="password_confirmation" v-model="form.password_confirmation" type="password" name="password_confirmation" class="form-control" placeholder="Clave">
+                  <label for="password_confirmation">Confirmar clave</label>
+                  <input id="password_confirmation" v-model="form.password_confirmation" type="password" name="password_confirmation" class="form-control" placeholder="">
                   <HasError :form="form" field="password_confirmation" />
                 </div>
-                <div class="mb-3 form-group">
-                  <input id="photo" v-model="form.photo" type="text" name="photo" class="form-control" placeholder="photo">
-                  <HasError :form="form" field="photo" />
-                </div>
+                
               </section>
               <!-- buttons -->
               <div class="row">
@@ -110,8 +112,8 @@
               </div>
             </form>
           </div>
-        </div>
-      </div>
+        <!-- </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -125,7 +127,7 @@
           last_name:'',
           id_card:'',
           birth_date:'',
-          photo:'',
+          photo:'default',
           direction:'',
           state:'',
           city:'',
@@ -137,6 +139,23 @@
       }
     },
     methods:{
+      updatePhoto(e) {
+        let file = e.target.files[0];
+        let reader = new FileReader();
+        if (file['size'] < 20000000) {
+          reader.onloadend = (file) => {
+            /* console.log('Result', reader.result); */
+            this.form.photo = reader.result;
+          }
+          reader.readAsDataURL(file)
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'You are uploading a large file.'
+          })
+        }
+      },
       regresar() {
         this.step--
       },
@@ -157,13 +176,28 @@
           }
         }
       },
-      async createUser() {
-        const res = await this.form.post('api/user');
-        console.log(res);
-        if (res.status === 201) {
-          window.location.href = "/login"
-        }
-        // this.$router.push({ name: '/profile'})
+      createUser() {
+        this.$Progress.start();
+        this.form.post('/registro')
+        .then((res) => {
+          console.log(res);
+          this.$Progress.finish();
+          if (res.status === 201) {
+            window.location.href = "/login"
+          }
+        })
+        .catch((err) => {
+          this.$Progress.fail();
+          Swal.fire(
+            '¡Error!',
+            'Fallo al registrar.',
+            'warning'
+          );
+          console.log(err);
+        })
+        
+        
+        
       }
     },
     components:{}

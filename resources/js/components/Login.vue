@@ -4,7 +4,7 @@
       <div class="register-box">
         <div class="card card-outline card-primary">
           <div class="card-header text-center">
-            <h1><b>Login</b></h1>
+            <h1><b>Iniciar Sesión</b></h1>
           </div>
           <div class="card-body">
             <form @submit.prevent="loginUser">
@@ -53,10 +53,12 @@
     methods: {
       async loginUser() {
         if (this.form.password === this.form.password_confirmation) {
+          this.$Progress.start();
           const res = await this.form.post('/login');
           console.log(res);
+          this.$Progress.finish();
           if (res.status === 204) {
-            window.location.href = "/"
+            window.location.href = "/profile"
           }
         } else {
           this.form.errors.set('password_confirmation', 'Las claves no coinciden')

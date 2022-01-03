@@ -5,11 +5,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Usuarios</h3>
-            <div class="card-tools">
-              <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNew"> Crear Usuario 
-                <i class="fas fa-user-plus fa-fw"></i>
-              </button>
-            </div>
+            
             <!-- Button trigger modal -->
           </div>
           <!-- /.card-header -->
@@ -18,11 +14,13 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>User</th>
-                  <th>ID Card</th>
-                  <th>Birth Date</th>
-                  <th>Photo</th>
-                  <th>Email</th>
+                  <th>Nombre</th>
+                  <th>Cedula</th>
+                  <th>Fecha de Nacimiento</th>
+                  <th>Foto</th>
+                  <th>Correo</th>
+                  <th>Estatus</th>
+                  <th>Acceso/Eliminar</th>
                 </tr>
               </thead>
               <tbody>
@@ -33,10 +31,13 @@
                   <td> {{ user.name | upText}} {{ user.last_name | upText}} </td>
                   <td> {{ user.id_card }} </td>
                   <td> {{ user.birth_date | myDate}} </td>
-                  <td> {{ user.photo }} </td>
+                  <td> 
+                    <img :src="getImg(user.photo)" alt="photo" width="100px" height="100px">
+                  </td>
                   <td> {{ user.email }} </td>
+                  <td> {{ user.access | myAccess}} </td>
                   <td>
-                    <a href="#">
+                    <a href="#"  @click="accessUser(user.id)">
                       <i class="fa fa-edit blue"></i>
                     </a>
                     /
@@ -44,6 +45,7 @@
                       <i class="fa fa-trash red"></i>
                     </a>
                   </td>
+                  
                 </tr>
               </tbody>
             </table>
@@ -57,86 +59,7 @@
         <!-- /.card -->
       </div>
     </div>
-    <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="addNewLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addNewLabel">Modal title</h5>
-            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
-          </div>
-          <form @submit.prevent="createUser">
-            <div class="modal-body">
-              <!-- Nombre -->
-              <div class="mb-3 form-group">
-                <input id="name" v-model="form.name" type="text" name="name" class="form-control" placeholder="Nombre">
-                <HasError :form="form" field="name" />
-              </div>
-              <!-- Apellido -->
-              <div class="mb-3 form-group">
-                <input id="last_name" v-model="form.last_name" type="text" name="last_name" class="form-control" placeholder="Apellido">
-                <HasError :form="form" field="last_name" />
-              </div>
-              <!-- Cedula -->
-              <div class="mb-3 form-group">
-                <input id="id_card" v-model="form.id_card" type="number" name="id_card" class="form-control" placeholder="Cedula">
-                <HasError :form="form" field="id_card" />
-              </div>
-              <!-- Fecha de Nacimiento -->
-              <div class="mb-3 form-group">
-                <input id="birth_date" v-model="form.birth_date" type="date" name="birth_date" class="form-control" placeholder="Fecha de Nacimiento">
-                <HasError :form="form" field="birth_date" />
-              </div>
-              <!-- Foto -->
-              <div class="mb-3 form-group">
-                <input id="photo" v-model="form.photo" type="text" name="photo" class="form-control" placeholder="Foto">
-                <HasError :form="form" field="photo" />
-              </div>
-              <!-- Direccion -->
-              <div class="mb-3 form-group">
-                <input id="direction" v-model="form.direction" type="text" name="direction" class="form-control" placeholder="Direccion">
-                <HasError :form="form" field="direction" />
-              </div>
-              <!-- Estado -->
-              <div class="mb-3 form-group">
-                <select id="state" v-model="form.state" type="text" name="state" class="form-control" placeholder="Estado">
-                  <option value="">Seleccione un Estado</option>
-                  <option value="Carabobo">Carabobo</option>
-                  <option value="Aragua">Aragua</option>
-
-                </select>
-                <HasError :form="form" field="state" />
-              </div>
-              <!-- Ciudad -->
-              <div class="mb-3 form-group">
-                <input id="city" v-model="form.city" type="text" name="city" class="form-control" placeholder="Ciudad">
-                <HasError :form="form" field="city" />
-              </div>
-              <!-- Email -->
-              <div class="mb-3 form-group">
-                <input id="email" v-model="form.email" type="email" name="email" class="form-control" placeholder="Correo">
-                <HasError :form="form" field="email" />
-              </div>
-              <!-- Clave -->
-              <div class="mb-3 form-group">
-                <input id="password" v-model="form.password" type="password" name="password" class="form-control" placeholder="Clave">
-                <HasError :form="form" field="password" />
-              </div>
-              <!-- Clave confirmacion -->
-              <div class="mb-3 form-group">
-                <input id="password_confirmation" v-model="form.password_confirmation" type="password" name="password_confirmation" class="form-control" placeholder="Clave">
-                <HasError :form="form" field="password_confirmation" />
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Salir</button>
-              <button type="submit" class="btn btn-primary">Crear</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    
   </div>
 </template>
 
@@ -144,85 +67,76 @@
 export default { 
   data() {
     return {
-      users: {},
-      form: new Form({
-        name:'',
-        last_name:'',
-        id_card:0,
-        birth_date:'',
-        photo:'',
-        direction:'',
-        state:'',
-        city:'',
-        email:'',
-        password:'',
-        password_confirmation:''
-      })
+      users: {}
     }
   },
   methods: {
+    getImg(img) {
+      return "img/users/" + img;
+    },
+    accessUser(id) {
+      this.$Progress.start();
+      axios.patch('/user/'+id)
+      .then((res)=>{
+        this.$Progress.finish();
+        Fire.$emit('AfterCreate');
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: '¡Acceso modificado con exito!',
+          showConfirmButton: false,
+          timer: 2000
+        });
+        console.log(res);
+      })
+      .catch((err) => {
+        this.$Progress.fail();
+        console.log(err);
+      })
+      
+    },
     getResults(page = 1) {
-			axios.get('api/user?page=' + page)
-				.then(response => {
-					this.users = response.data;
-				});
+			axios.get('/user?page=' + page)
+      .then(response => {
+        this.users = response.data;
+      });
 		},
     deleteUser(id) {
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: '¿Estas seguuro?',
+        text: "¡Esta accion no podra ser revertida!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText: '¡Si, eliminar usuario!'
       }).then((result) => {
         if (result.isConfirmed) {
           // send request to server
           this.$Progress.start()
-          this.form.delete('api/user/' + id)
+          this.form.delete('/user/' + id)
           .then(() => {
             Swal.fire(
-              'Deleted!',
-              'Your file has been deleted.',
+              '¡Eliminado!',
+              'Usuario eliminado con exito.',
               'success'
             )
             Fire.$emit('AfterCreate');
           }).catch(() => {
             Swal.fire(
-              'Failed!',
-              'There was something wronge.',
+              '¡Error!',
+              'Algo salio mal :(',
               'warning'
             )
           });
           this.$Progress.finish()
         }
       })
-      axios.get('api/user').then(({data}) => (this.users = data));
+      axios.get('/user').then(({data}) => (this.users = data));
     },
     loadUsers() {
-      axios.get('api/user').then(({data}) => (this.users = data));
+      axios.get('/user').then(({data}) => (this.users = data));
     },
-    async createUser() {
-      this.$Progress.start()
-      const res = await this.form.post('api/user');
-
-      Fire.$emit('AfterCreate'); // envia una peticion luego de crear un usuario
-
-      // para esconder el modal luego de lanzar la peticion post
-      $('#addNew').modal('hide')
-
-      Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'User created in successfully!',
-        showConfirmButton: false,
-        timer: 2000
-      })
-
-      this.$Progress.finish()
-      this.form.reset()
-    }
   },
   created() {
     this.loadUsers();
