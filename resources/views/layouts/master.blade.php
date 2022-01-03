@@ -31,72 +31,132 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <a href="/" class="brand-link">
       <img src="./img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">WP Boards</span>
-    </a>
-
+    </a>    
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="./img/magician.png" class="img-circle elevation-2" alt="User Image">
+      @guest
+      @else
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="./img/users/{{ Auth::user()->photo }}" class="img-circle elevation-2" alt="User Image">
+          </div>
+          <div class="info">
+            <a href="#" class="d-block">
+              {{ Auth::user()->name }}
+            </a>
+          </div>
         </div>
-        <div class="info">
-          <a href="#" class="d-block">
-            {{-- {{ Auth::user()->name }} --}}
-          </a>
-        </div>
-      </div>
+      @endguest
+      
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <router-link to="/dashboard" class="nav-link">
-              <i class="nav-icon fas fa-th blue"></i>
-              <p>
-                Mis Programas                
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <router-link to="/profile" class="nav-link">
-              <i class="nav-icon fas fa-user"></i>
-              <p>
-                Mi Perfil                
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-cog green"></i>
-              <p>
-                Administrar
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
+          @guest
+            <li class="nav-item">
+              <router-link to="/home" class="nav-link">
+                <i class="nav-icon fas fa-home blue"></i>
+                <p>
+                  Principal
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <router-link to="/contact" class="nav-link">
+                <i class="nav-icon fas fa-id-card-alt blue"></i>
+                <p>
+                  Contacto
+                </p>
+              </a>
+            </li>          
+            <li class="nav-item">
+              <a href="/login" class="nav-link">
+                <i class="nav-icon fas fa-sign-in-alt blue"></i>
+                <p>
+                  Iniciar Sesión                
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/register" class="nav-link">
+                <i class="nav-icon fas fa-clipboard-list blue"></i>
+                <p>
+                  Registrarse                
+                </p>
+              </a>
+            </li>
+          @else
+          
+            <li class="nav-item">
+              <router-link to="/dashboard" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt blue"></i>
+                <p>
+                  Tablero                
+                </p>
+              </a>
+            </li>
+            @if (Auth::user()->is_admin == 1)
+                
               <li class="nav-item">
-                <router-link to="/usuarios" class="nav-link">
-                  <i class="fas fa-users nav-icon"></i>
-                  <p>Usuarios</p>
+                <router-link to="/users" class="nav-link">
+                  <i class="nav-icon fas fa-users green"></i>
+                  <p>
+                    Usuarios                
+                  </p>
                 </a>
-              </li>              
-            </ul>
-          </li>
+              </li>
 
-          <li class="nav-item">
-            <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault();
-            document.getElementById('logout-form').submit();">
-              <i class="nav-icon fa fa-power-off red"></i>
-              <p>
-                Cerrar Sesión                
-              </p>
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-              @csrf
-            </form>
-          </li>
+              <li class="nav-item">
+                <router-link to="/messages" class="nav-link">
+                  <i class="nav-icon fas fa-envelope orange"></i>
+                  <p>
+                    Mensajes                
+                  </p>
+                </a>
+              </li>
+            @endif
+
+            <li class="nav-item">
+              <router-link to="/profile" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>
+                  Mi perfil
+                </p>
+              </a>
+            </li>
+            {{-- <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-cog green"></i>
+                <p>
+                  Administrar
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <router-link to="/usuarios" class="nav-link">
+                    <i class="fas fa-users nav-icon"></i>
+                    <p>Usuarios</p>
+                  </a>
+                </li>              
+              </ul>
+            </li> --}}
+            <li class="nav-item">
+              <a href="{{ route('logout') }}" class="nav-link" onclick="event.preventDefault();
+              document.getElementById('logout-form').submit();">
+                <i class="nav-icon fa fa-power-off red"></i>
+                <p>
+                  Cerrar Sesión                
+                </p>
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+              </form>
+            </li>  
+          @endguest
+          
           
         </ul>
       </nav>

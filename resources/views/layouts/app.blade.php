@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'WP Boards') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -23,9 +23,10 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                <a class="navbar-brand" href="{{ url('/home') }}">
+                    {{ config('app.name', 'WP Boards') }}
                 </a>
+                
                 @guest
                 @else
                     @if (Auth::user()->is_admin)
@@ -48,13 +49,13 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Iniciar Sesión') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Registrarse') }}</a>
                                 </li>
                             @endif
                         @else
@@ -90,12 +91,25 @@
                             </li>
                         @endguest
                     </ul>
-                </div>
+                </div>                
             </div>
         </nav>
 
         <main>
-            @yield('content')
+            <vue-progress-bar></vue-progress-bar>
+            <div class="hold-transition register-page">
+                <div class="register-box">
+                    @if (Session::has('mensaje'))
+                        <div class="alert alert-danger alert-dismissible" role="alert">      
+                            {{ Session::get('mensaje') }}      
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="false">&times;</span>
+                            </button>      
+                        </div>
+                    @endif
+                    @yield('content')
+                </div>
+            </div>
         </main>
     </div>
 </body>
