@@ -44,6 +44,50 @@
 					</div>
 				</div>
 			</div>
+			
+		</section>
+		<section>
+			<div class="card-columns mt-4 mb-4">
+				<div v-for="user in users" :key="user.id" class="card">
+					<router-link :to='"dev/"+user.id'>
+						<img :src="getImg(user.photo)" class="card-img-top" alt="photo" width="100px" height="200px">
+					</router-link>
+					<div class="card-body">
+						<h5 class="card-title">{{ user.name | upText}} {{ user.last_name | upText}}</h5>
+						<p class="card-text">{{ user.email }}</p>
+					</div>
+				</div>
+			</div>
 		</section>
 	</div>
 </template>
+
+<script>
+export default { 
+  data() {
+    return {
+      users: {}
+    }
+  },
+  methods: {
+		getUrl(id) {
+			return "dev/" + id;
+		},
+    getImg(img) {
+      return "img/users/" + img;
+    },
+    loadUsers() {
+      axios.get('/gallery').then(({data}) => this.users = data);
+			// console.log(this.users);
+    },
+  },
+  created() {
+    this.loadUsers();
+    // registro de evento
+    Fire.$on('AfterCreate', () => {
+      this.loadUsers();
+    })
+    /* setInterval(() => this.loadUsers(), 3000); */
+  },
+}
+</script>

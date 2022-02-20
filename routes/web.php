@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\UserMessageController;
+use App\Http\Controllers\UserRegisterController;
+use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProgramaController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,68 +20,55 @@ use Illuminate\Http\Request;
 |
 */
 
-// Esta ruta nos direcciona a welcome.blade en la carpeta views
-Route::get('/', function () {    
-    return view('auth.login');
-    
-});
-Route::get('/home', function() {
-    return redirect('/');
-});
-
-// Colocamos el nombre de la carpeta y un . para acceder a los archivos dentro
-/* Route::get('/empleado', function () {
-    return view('empleado.index');
-});
-
-Route::get('/empleado/create', [EmpleadoController::class, 'create']); */
-
-// Ya accedemos a todos los metodos de la clase EmpleadoControler
-Route::resource('empleado', EmpleadoController::class)->middleware(['auth', 'access']); // auth, para respetar la autenticacion y no crear empleados sin logearme
-Route::resource('programa', ProgramaController::class)->middleware(['auth', 'access']);
+// Registramos los metodos de las rutas y protegemos con middleware si es necesario
+Route::resource('message', UserMessageController::class);
+Route::resource('user', UserController::class)->middleware(['auth', 'access']);
 Route::resource('admin', AdminController::class)->middleware(['auth', 'admin']);
+Route::resource('programa', ProgramaController::class)->middleware(['auth', 'access']);
 
 // desactivamos el registro y el olvide clave
-/* Auth::routes(['register'=>false,'reset'=>false]); */
 Auth::routes(['register'=>true,'reset'=>false]);
 
-// Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
+/* Public Routes */
 
-Route::group(['middleware' => ['auth', 'access']], function(){
-    /* Route::get('/home', [EmpleadoController::class, 'index'])->name('home'); */
-    Route::get('/', [EmpleadoController::class, 'index'])->name('home-empleado');
+Route::get('/gallery', [GalleryController::class, 'index']);
+
+Route::get('/dev_program/{id}', [GalleryController::class, 'dev_program']);
+
+Route::put('/dev/{id}', [GalleryController::class, 'dev']);
+
+Route::post('/registro', [UserRegisterController::class, 'store']);
+
+Route::get('/dev/{id}', function() {
+    return redirect('home');
 });
 
+Route::get('/home', function () {    
+    return view('layouts.master');
+});
+
+Route::get('/', function() {
+    return view('layouts.master');
+});
+
+Route::get('/contact', function() {
+    return view('layouts.master');
+});
+
+/* Auth Routes */
+
+// Normal user
 Route::group(['middleware' => ['auth', 'access']], function() {
-    Route::get('/programa', [ProgramaController::class, 'index']);
+    Route::get('/profile', function() {   return view('layouts.master'); });
+    Route::get('/getUserIdProfile', [UserController::class, 'getUserIdProfile']);
+    Route::patch('/updateUser/{id}', [UserController::class, 'updateUser']);
+    Route::get('/', function() {     return redirect('/dashboard'); });
+    Route::get('/dashboard', function() { return view('layouts.master'); });
 });
 
+// Admin
 Route::group(['middleware' => ['auth', 'admin']], function(){
     Route::get('/', [AdminController::class, 'index'])->name('home-admin');
-});
-
-/* Route::get('/home', function() {
-    return view('auth.login');
-}); */
-Route::get('prueba', function(){
-    return view('home');
-});
-Route::post('/test', function(Request $request){
-    return $request;
-});
-
-// testeo de peticiones desde vue a laravel 
-Route::put('/empleado', [EmpleadoController::class, 'post_store']);
-
-/* Route::get('{path}', [HomeController::class, 'index'])->where('path', '([A-z\d-\/_.]+)?'); */
-Route::get('/dashboard', function() {
-    return view('layouts.master');
-});
-
-Route::get('/profile', function() {
-    return view('layouts.master');
-});
-
-Route::get('/usuarios', function() {
-    return view('layouts.master');
+    Route::get('/messages', function() {   return view('layouts.master'); });
+    Route::get('/users', function() {     return view('layouts.master'); });
 });

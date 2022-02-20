@@ -22,7 +22,7 @@ class AccessMiddleware
             return $next($request);
         } else {
             Auth::logout();
-            return redirect('login')->with('mensaje', 'has sido baneado');
+            return redirect('login')->with('mensaje', 'Acceso negado: usuario baneado.');
         }
     }
 }

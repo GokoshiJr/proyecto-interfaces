@@ -3,12 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Programa;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic as Image;
 
+// Actualiza la foto guardada, elimina la anterior
+function update_photo($old_photo, $new_photo, $data, $n) 
+{
+    if ($old_photo != $new_photo)
+    {
+        $name_photo = time().'.'.explode('/', explode(':', substr($new_photo,0,strpos($new_photo, ';')))[1])[1];
+        Image::make($new_photo)->save(public_path('./img/programs/').$name_photo);
+        
+        $data['photo_'.$n] = $name_photo;
+        $old_programa = public_path('img/programs/').$old_photo;
+        
+        if (file_exists($old_programa)) {
+            @unlink($old_programa);
+        }
+    }
+    return $data;
+}
+
+// guardamos la foto en primer lugar
+function register_photo($photo_name, $n) 
+{
+    
+    $name_photo = $n.time().'.'.explode('/', explode(':', substr($photo_name,0,strpos($photo_name, ';')))[1])[1];
+    Image::make($photo_name)->save(public_path('./img/programs/').$name_photo);
+    
+    return $name_photo;
+}
 
 class ProgramaController extends Controller
 {
@@ -48,9 +73,9 @@ class ProgramaController extends Controller
         $campos = [
             'name'     =>'required|string|max:100',
             'type'     =>'required|string|max:100',
-            /* 'photo_1'  =>'required|mimes:jpeg,png,jpg',
-            'photo_2'  =>'required|mimes:jpeg,png,jpg',
-            'photo_3'  =>'required|mimes:jpeg,png,jpg', */
+            'photo_1'  =>'required|string',
+            'photo_2'  =>'required|string',
+            'photo_3'  =>'required|string',
             'language' =>'required|string|max:100',
             'library'  =>'required|string|max:100',
             'plugin'   =>'required|string|max:100',
@@ -62,30 +87,17 @@ class ProgramaController extends Controller
 
         $this->validate($request, $campos, $mensaje);
 
-        if ($request->photo_1) {
-            $name_photo = time().'.'.explode('/', explode(':', substr($request->photo_1,0,strpos($request->photo_1, ';')))[1])[1];
-            Image::make($request->photo_1)->save(public_path('./img/test/').$name_photo);
-        }
-
-        if ($request->photo_2) {
-            $name_photo_2 = time().'.'.explode('/', explode(':', substr($request->photo_2,0,strpos($request->photo_2, ';')))[1])[1];
-            Image::make($request->photo_2)->save(public_path('./img/test/').$name_photo_2);
-        }
-
-        if ($request->photo_3) {
-            $name_photo_3 = time().'.'.explode('/', explode(':', substr($request->photo_3,0,strpos($request->photo_3, ';')))[1])[1];
-            Image::make($request->photo_3)->save(public_path('./img/test/').$name_photo_3);
-        }
-
-        // $datosEmpleado = request()->all(); trae todos los datos       
-        $datosEmpleado = request()->except('_token'); // Traemos todos los datos menos la llave csrf
-        // return response()->json($datosEmpleado);
-        $datosEmpleado['photo_1'] = $name_photo;
-        $datosEmpleado['photo_2'] = $name_photo_2;
-        $datosEmpleado['photo_3'] = $name_photo_3;
-        Programa::insert($datosEmpleado); // inserta la info en la base de datos
-        // return response()->json($datosEmpleado);
-        return redirect('/dashboard');
+        $data = request()->all();
+        
+        $data['photo_1'] = register_photo($request->photo_1,1);
+        $data['photo_2'] = register_photo($request->photo_2,2);
+        $data['photo_3'] = register_photo($request->photo_3,3);
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        
+        Programa::insert($data); // inserta la info en la base de datos
+        
+        return 'Creado con exito';
     }
 
     /**
@@ -120,39 +132,11 @@ class ProgramaController extends Controller
     public function update(Request $request, $id)
     {
         $programa = Programa::findOrFail($id);
+        $data = request()->all();
         
-        if ($programa->photo_1 != $request->photo_1) 
-        {
-            $name_photo = time().'.'.explode('/', explode(':', substr($request->photo_1,0,strpos($request->photo_1, ';')))[1])[1];
-            Image::make($request->photo_1)->save(public_path('./img/test/').$name_photo);
-            $data = request()->all();
-            $data['photo_1'] = $name_photo;
-            
-        } else {
-            $data = request()->all();
-        }
-
-        if ($programa->photo_2 != $request->photo_2) 
-        {   
-            $name_photo_2 = time().'.'.explode('/', explode(':', substr($request->photo_2,0,strpos($request->photo_2, ';')))[1])[1];
-            Image::make($request->photo_2)->save(public_path('./img/test/').$name_photo_2);
-            $data = request()->all();
-            $data['photo_2'] = $name_photo_2;
-            
-        } else {
-            $data = request()->all();
-        }
-
-        if ($programa->photo_3 != $request->photo_3) 
-        {   
-            $name_photo_3 = time().'.'.explode('/', explode(':', substr($request->photo_3,0,strpos($request->photo_3, ';')))[1])[1];
-            Image::make($request->photo_3)->save(public_path('./img/test/').$name_photo_3);
-            $data = request()->all();
-            $data['photo_3'] = $name_photo_3;
-        } else {
-            $data = request()->all();
-        }
-        
+        $data = update_photo($programa->photo_1, $request->photo_1, $data, 1);
+        $data = update_photo($programa->photo_2, $request->photo_2, $data, 2);
+        $data = update_photo($programa->photo_3, $request->photo_3, $data, 3);
         
         Programa::where('id', '=', $id)->update($data);
         return "Actualizado";
@@ -166,8 +150,22 @@ class ProgramaController extends Controller
      */
     public function destroy($id)
     {
-        Programa::destroy($id);
+        $programa = Programa::findOrFail($id);
+        $d1 = public_path('img/programs/').$programa['photo_1'];
+        $d2 = public_path('img/programs/').$programa['photo_2'];
+        $d3 = public_path('img/programs/').$programa['photo_3'];
+        
+        if (file_exists($d1)) {
+            @unlink($d1);
+        }
+        if (file_exists($d2)) {
+            @unlink($d2);
+        }
+        if (file_exists($d3)) {
+            @unlink($d3);
+        }
 
+        Programa::destroy($id);
         return "Eliminado";
     }
 }

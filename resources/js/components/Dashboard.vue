@@ -79,12 +79,14 @@
             <div class="modal-body">
               <!-- Name -->
               <div class="mb-3 form-group">
-                <input id="name" v-model="form.name" type="text" name="name" class="form-control" placeholder="Nombre">
+                <label for="photo2">Nombre</label>
+                <input id="name" v-model="form.name" type="text" name="name" class="form-control" placeholder="">
                 <HasError :form="form" field="name" />
               </div>
               <!-- Type -->
               <div class="mb-3 form-group">
-                <input id="type" v-model="form.type" type="text" name="type" class="form-control" placeholder="Tipo">
+                <label for="photo2">Tipo</label>
+                <input id="type" v-model="form.type" type="text" name="type" class="form-control" placeholder="">
                 <HasError :form="form" field="type" />
               </div>
               <!-- photo_1 -->
@@ -107,17 +109,20 @@
               </div>              
               <!-- language -->
               <div class="mb-3 form-group">
-                <input id="language" v-model="form.language" type="text" name="language" class="form-control" placeholder="Lenguaje">
+                <label for="photo2">Lenguaje</label>
+                <input id="language" v-model="form.language" type="text" name="language" class="form-control" placeholder="">
                 <HasError :form="form" field="language" />
               </div>              
               <!-- library -->
               <div class="mb-3 form-group">
-                <input id="library" v-model="form.library" type="text" name="library" class="form-control" placeholder="Libreria">
+                <label for="photo2">Librería</label>
+                <input id="library" v-model="form.library" type="text" name="library" class="form-control" placeholder="">
                 <HasError :form="form" field="library" />
               </div>
               <!-- plugin -->
               <div class="mb-3 form-group">
-                <input id="plugin" v-model="form.plugin" type="text" name="plugin" class="form-control" placeholder="Plugins">
+                <label for="photo2">Plugin</label>
+                <input id="plugin" v-model="form.plugin" type="text" name="plugin" class="form-control" placeholder="">
                 <HasError :form="form" field="plugin" />
               </div>
               <input type="hidden" name="user_id" v-model="form.user_id">
@@ -156,7 +161,7 @@
     },
     methods: {
       getPhoto(img) {
-        return "img/test/" + img;
+        return "img/programs/" + img;
       },
       updatePhoto(e) {
         let file = e.target.files[0];
@@ -283,7 +288,7 @@
           this.$Progress.fail();
           Swal.fire(
             '¡Error!',
-            'Formato incorrecto de imagen.',
+            'Ocurrió un error al registrar la app.',
             'warning'
           );
         });
